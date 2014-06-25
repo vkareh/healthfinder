@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>HealthFinder</title>
+
+    <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap-theme.min.css">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+      <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+
+    <div id="healthfinder" class="container">
+      <h1>HealthFinder</h1>
+
+      <form id="search-form" class="form-inline" role="form">
+        <div class="form-group">
+          <label class="sr-only" for="search-city">City</label>
+          <input type="text" class="form-control" id="search-city" placeholder="City">
+        </div>
+        <div class="form-group">
+          <label class="sr-only" for="search-state">State</label>
+          <select class="form-control" id="search-state" placeholder="State">
+            <option value="">-- Select a state --</option>
+            <option value="AL">Alabama</option>
+            <option value="AK">Alaska</option>
+            <option value="AZ">Arizona</option>
+            <option value="AR">Arkansas</option>
+            <option value="CA">California</option>
+            <option value="CO">Colorado</option>
+            <option value="CT">Connecticut</option>
+            <option value="DE">Delaware</option>
+            <option value="DC">District Of Columbia</option>
+            <option value="FL">Florida</option>
+            <option value="GA">Georgia</option>
+            <option value="HI">Hawaii</option>
+            <option value="ID">Idaho</option>
+            <option value="IL">Illinois</option>
+            <option value="IN">Indiana</option>
+            <option value="IA">Iowa</option>
+            <option value="KS">Kansas</option>
+            <option value="KY">Kentucky</option>
+            <option value="LA">Louisiana</option>
+            <option value="ME">Maine</option>
+            <option value="MD">Maryland</option>
+            <option value="MA">Massachusetts</option>
+            <option value="MI">Michigan</option>
+            <option value="MN">Minnesota</option>
+            <option value="MS">Mississippi</option>
+            <option value="MO">Missouri</option>
+            <option value="MT">Montana</option>
+            <option value="NE">Nebraska</option>
+            <option value="NV">Nevada</option>
+            <option value="NH">New Hampshire</option>
+            <option value="NJ">New Jersey</option>
+            <option value="NM">New Mexico</option>
+            <option value="NY">New York</option>
+            <option value="NC">North Carolina</option>
+            <option value="ND">North Dakota</option>
+            <option value="OH">Ohio</option>
+            <option value="OK">Oklahoma</option>
+            <option value="OR">Oregon</option>
+            <option value="PA">Pennsylvania</option>
+            <option value="RI">Rhode Island</option>
+            <option value="SC">South Carolina</option>
+            <option value="SD">South Dakota</option>
+            <option value="TN">Tennessee</option>
+            <option value="TX">Texas</option>
+            <option value="UT">Utah</option>
+            <option value="VT">Vermont</option>
+            <option value="VA">Virginia</option>
+            <option value="WA">Washington</option>
+            <option value="WV">West Virginia</option>
+            <option value="WI">Wisconsin</option>
+            <option value="WY">Wyoming</option>
+            <option value="AS">American Samoa</option>
+            <option value="GU">Guam</option>
+            <option value="MP">Northern Mariana Islands</option>
+            <option value="PR">Puerto Rico</option>
+            <option value="UM">United States Minor Outlying Islands</option>
+            <option value="VI">Virgin Islands</option>
+            <option value="AA">Armed Forces Americas</option>
+            <option value="AP">Armed Forces Pacific</option>
+            <option value="AE">Armed Forces Others</option>
+            </select>
+        </div>
+        <div class="form-group">
+          <p class="form-control-static">or</p>
+        </div>
+        <div class="form-group">
+          <label class="sr-only" for="search-zipcode">Zip-code</label>
+          <input type="text" class="form-control" id="search-zipcode" placeholder="Zip-code">
+        </div>
+        <button id="search-submit" type="submit" class="btn btn-default">Search</button>
+      </form>
+
+      <br>
+      <div class="row">
+        <div class="col-md-6"><ul id="hospital-list" class="list-unstyled"></ul></div>
+        <div class="col-md-6"><ul id="plan-list" class="list-unstyled"></ul></div>
+      </div>
+    </div>
+
+    <div id="footer">
+      <div class="container">
+        <small class="text-muted pull-right">&copy; 2014 <a class="text-muted" href="http://www.vkareh.net">Victor Kareh</a></small>
+      </div>
+    </div>
+
+    <script src="bower_components/jquery/dist/jquery.min.js"></script>
+    <script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="bower_components/underscore/underscore.js"></script>
+    <script src="bower_components/backbone/backbone.js"></script>
+    <script src="app.js"></script>
+
+    <script type="text/template" id="hospital-template">
+      <address id="hospital-<%= provider_number %>">
+        <strong><%= hospital_name %></strong><br>
+        <%= address_1 %><br>
+        <%= city %>, <%= state %> <%= zip_code %><br>
+        Phone: <a href="tel:+<%= phone_number.phone_number %>"><%= phone_number.phone_number %></a> | <a href="https://www.google.com/maps/place/<%= location.latitude %>,<%= location.longitude %>" target="_blank">Map</a> (<em><%= distance %> <%= distance === 1 ? 'mile' : 'miles' %></em>)<br>
+      </address>
+    </script>
+
+    <script type="text/template" id="measures-template">
+      <% _.each(measures, function(response, measure) { %>
+        <li class="hospital-measure">
+          <% if (response === true) { %>
+            <span class="glyphicon glyphicon-ok text-success"></span> <%= measure %>
+          <% } else if (response === false) { %>
+            <span class="glyphicon glyphicon-remove text-danger"></span> <span class="text-muted"><%= measure %></span>
+          <% } %>
+        </li>
+      <% }); %>
+    </script>
+
+    <script type="text/template" id="plan-template">
+      <address>
+        <strong><%= issuer_name %></strong><br>
+        <em><%= plan_marketing_name %></em> (<%= plan_type %>)<br>
+        Phone: <a href="tel:+<%= customer_service_phone_number_local %>"><%= customer_service_phone_number_local %></a> | <a href="<%= plan_brochure_url.url %>" target="_blank">Website</a><br>
+      </address>
+    </script>
+
+  </body>
+</html>
