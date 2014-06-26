@@ -102,7 +102,8 @@
         <button id="search-submit" type="submit" class="btn btn-default">Search</button>
       </form>
 
-      <br>
+      <hr>
+
       <div class="row">
         <div class="col-md-6"><ul id="hospital-list" class="list-unstyled"></ul></div>
         <div class="col-md-6"><ul id="plan-list" class="list-unstyled"></ul></div>
@@ -146,6 +147,8 @@
       <address>
         <strong><%= issuer_name %></strong><br>
         <em><%= plan_marketing_name %></em> (<%= plan_type %>)<br>
+        <% if (premium_average_individual) { %><small>Average price per adult: <em>$<%= premium_average_individual %></em></small><br><% } %>
+        <% if (premium_child) { %><small>Price per child: <em>$<%= premium_child %></em></small><br><% } %>
         Phone: <a href="tel:+<%= customer_service_phone_number_local %>"><%= customer_service_phone_number_local %></a> | <a href="<%= plan_brochure_url.url %>" target="_blank">Website</a><br>
       </address>
     </script>

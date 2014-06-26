@@ -149,7 +149,26 @@ $(function(){
 
   // Healthcare plan model
   var Plan = Backbone.Model.extend({
-    defaults: { plan_brochure_url: {url: ''} }
+    defaults: {
+      plan_brochure_url: {url: ''},
+      premium_child: ''
+    },
+    initialize: function() {
+      this.getAverage();
+    },
+    getAverage: function() {
+      var total = 0;
+      var count = 0;
+      _.each(this.attributes, function(val, key) {
+        if (/premium_adult_individual_.*/.test(key)) {
+          total += parseFloat(val);
+          count++;
+        }
+      });
+      if (count) {
+        this.set({premium_average_individual: (total / count).toFixed(2)});
+      }
+    }
   });
 
   // Healthcare plan collection for a specific geographic location
