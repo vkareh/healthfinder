@@ -151,6 +151,7 @@ $(function(){
   var Plan = Backbone.Model.extend({
     defaults: {
       plan_brochure_url: {url: ''},
+      premium_average_individual: '',
       premium_child: ''
     },
     initialize: function() {
